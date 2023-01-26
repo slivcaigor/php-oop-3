@@ -172,8 +172,51 @@ class Impiegato extends Persona
     }
 }
 
+class Capo extends Persona
+{
+    private $dividendo;
+    private $bonus;
 
-$stipendio = new Stipendio(1000, "no", "no");
+    public function __construct($nome, $cognome, $dataNascita, $luogoNascita, $codiceFiscale, $dividendo, $bonus)
+    {
+        parent::__construct($nome, $cognome, $dataNascita, $luogoNascita, $codiceFiscale);
+        $this->setDividendo($dividendo);
+        $this->setBonus($bonus);
+    }
+
+    public function getDividendo()
+    {
+        return $this->dividendo;
+    }
+    public function setDividendo($dividendo)
+    {
+        $this->dividendo = $dividendo;
+    }
+    public function getBonus()
+    {
+        return $this->bonus;
+    }
+    public function setBonus($bonus)
+    {
+        $this->bonus = $bonus;
+    }
+
+    public function getRedditoAnnuale()
+    {
+        return $this->getDividendo() * 12 + $this->getBonus();
+    }
+
+    public function getHtml()
+    {
+        $html = parent::getHtml();
+        $html .= '<br> Dividendo annuale: ' . $this->getDividendo()
+            . '<br> Bonus: ' . $this->getBonus()
+            . '<br> Reddito annuale: ' . $this->getRedditoAnnuale();
+        return $html;
+    }
+}
+
+$stipendio = new Stipendio(1300, "no", "no");
 echo $stipendio->getHtml() . "<br>" . "<br>";
 
 $persona = new Persona("Silvio", "Rossi", "04-02-1997", "Milano", "SLVGRI95Z4505F");
@@ -181,3 +224,6 @@ echo $persona->getHtml() . "<br>" . "<br>";
 
 $impiegato = new Impiegato('Mario', 'Rossi', '01-01-1989', 'Roma', 'ABCDEF01G01H123I', $stipendio, '02-01-2019');
 echo $impiegato->getHtml() . "<br>" . "<br>";
+
+$capo = new Capo('Fabio', 'Forghieri', '01/01/1980', 'Milano', 'GHIJKL01M01N234O', 500000, 10000);
+echo $capo->getHtml() . "<br>" . "<br>";
