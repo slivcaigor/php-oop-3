@@ -52,9 +52,9 @@ class Stipendio
     // calcolo stipendio annuale se indicate tredicesima e quattoridcesima come "si", altrimenti vengono considerate "0"
     public function getAnnuale()
     {
-        $tredicesima = $this->tredicesima == 'si' ? $this->mensile : 0;
-        $quattordicesima = $this->quattordicesima == 'si' ? $this->mensile : 0;
-        return $this->mensile * 12 + $tredicesima + $quattordicesima;
+        $tredicesima = $this->getTredicesima() == 'si' ? $this->getMensile() : 0;
+        $quattordicesima = $this->getQuattordicesima() == 'si' ? $this->getMensile() : 0;
+        return $this->getMensile() * 12 + $tredicesima + $quattordicesima;
     }
 }
 
@@ -126,9 +126,58 @@ class Persona
     }
 }
 
-$stipendio = new Stipendio(1200, "si", "si");
-echo $stipendio->getHtml() . "<br>" . "<br>";
+class Impiegato extends Persona
+{
+    private $stipendio;
+    private $dataAssunzione;
 
+    public function __construct($nome, $cognome, $dataNascita, $luogoNascita, $codiceFiscale, $stipendio, $dataAssunzione)
+    {
+        parent::__construct($nome, $cognome, $dataNascita, $luogoNascita, $codiceFiscale);
+
+        $this->setStipendio($stipendio);
+        $this->setDataAssunzione($dataAssunzione);
+    }
+
+    public function getStipendio()
+    {
+        return $this->stipendio;
+    }
+    public function setStipendio($stipendio)
+    {
+        $this->stipendio = $stipendio;
+    }
+    public function getDataAssunzione()
+    {
+        return $this->dataAssunzione;
+    }
+    public function setDataAssunzione($dataAssunzione)
+    {
+        $this->dataAssunzione = $dataAssunzione;
+    }
+
+    public function getStipendioAnnuale()
+    {
+        return $this->getStipendio()->getAnnuale();
+    }
+
+    public function getHtml()
+    {
+        $html = parent::getHtml();
+        $html .= '<br> Data di assunzione: '
+            . $this->getDataAssunzione()
+            . '<br> Stipendio annuale: '
+            . $this->getStipendioAnnuale();
+        return $html;
+    }
+}
+
+
+$stipendio = new Stipendio(1000, "no", "no");
+echo $stipendio->getHtml() . "<br>" . "<br>";
 
 $persona = new Persona("Silvio", "Rossi", "04-02-1997", "Milano", "SLVGRI95Z4505F");
 echo $persona->getHtml() . "<br>" . "<br>";
+
+$impiegato = new Impiegato('Mario', 'Rossi', '01-01-1989', 'Roma', 'ABCDEF01G01H123I', $stipendio, '02-01-2019');
+echo $impiegato->getHtml() . "<br>" . "<br>";
